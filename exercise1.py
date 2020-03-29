@@ -22,6 +22,7 @@ nltk.download('stopwords')
 book = gutenberg.raw('melville-moby_dick.txt')
 #book = gutenberg.raw('shakespeare-caesar.txt')
 
+#PART1
 sentences = sent_tokenize(book)
 length = len(sentences)
 training_set = sentences[0 : math.ceil( length*(80/100))]
@@ -58,10 +59,16 @@ vocabulary = [w  for w in count if count[w]>10]
 #pprint(vocabulary)
 
 #replace other words with a special token *UNK*
-done_training_sentences = []
-for s in training_sentences:   
-  done_training_sent = [stemmer.stem(w) if (stemmer.stem(w) in vocabulary) else "*UNK*" for w in s]
-  done_training_sentences.append(done_training_sent)
+def replaceWithUNK(sentences):
+  done_sentences = []
+  for s in sentences:   
+    done_sent = [stemmer.stem(w) if (stemmer.stem(w) in vocabulary) else "*UNK*" for w in s]
+    done_sentences.append(done_sent)
+  return done_sentences
+#do the replace
+done_training_sentences = replaceWithUNK(training_sentences)
+done_development_sentences = replaceWithUNK(development_sentences)
+done_test_sentences = replaceWithUNK(test_sentences)
 
 #Bigram and trigram language model for word sequences
 def createBiTrigrams(sentences):
@@ -71,5 +78,6 @@ def createBiTrigrams(sentences):
     bigram_counter.update([gram for gram in ngrams(sent, 2, pad_left=True, pad_right=True,left_pad_symbol='<start>',right_pad_symbol='<end>') ])
     trigram_counter.update([gram for gram in ngrams(sent, 3, pad_left=True, pad_right=True,left_pad_symbol='<start>',right_pad_symbol='<end>') ])
   return (bigram_counter, trigram_counter)
-
+#create model
 (bigram_counter, trigram_counter) = createBiTrigrams(done_training_sentences)
+
