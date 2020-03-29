@@ -7,13 +7,11 @@ import math
 from nltk.tokenize import WhitespaceTokenizer
 import collections
 from nltk.stem import PorterStemmer
-
 from nltk.corpus import stopwords
 from collections import Counter
 from nltk.util import ngrams
 from pprint import pprint
 
-#part1
 #downloads
 nltk.download('punkt')
 nltk.download('gutenberg')
@@ -81,3 +79,4 @@ def createBiTrigrams(sentences):
 #create model
 (bigram_counter, trigram_counter) = createBiTrigrams(done_training_sentences)
 
+#PART 2
