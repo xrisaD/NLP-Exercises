@@ -1,4 +1,5 @@
-!pip install -U nltk
+#Chat with a silly psychologist
+#!pip install -U nltk
 from nltk.chat.util import Chat, reflections
 pairs = [
     [r'(.*) happy because (.*)',
