@@ -28,31 +28,36 @@ development_set = sentences[math.ceil( length*(80/100)) : math.ceil( length*(90/
 test_set = sentences[math.ceil( len(sentences)*(90/100))]
 
 #Create dictionary from training set:
-#Tokenization
+
 words=[]
 training_sentences = []
 development_sentences = []
 test_sentences = []
+#Tokenization
 whitespace_wt = WhitespaceTokenizer()
+#PorterStemmer:removing the commoner morphological and inflexional endings from words in English
+#also delete stopwords
+stemmer = PorterStemmer()
 for i, j , k in zip(training_set, development_set, test_set):
+  #tokenization
   training_s = whitespace_wt.tokenize(i)
   development_s = whitespace_wt.tokenize(j)
   test_s = whitespace_wt.tokenize(k)
 
-  training_sentences.append(training_s)
-  development_sentences.append(development_s)
-  test_sentences.append(test_s)
+  #stemming, and no stopwords
+  training_stems = [stemmer.stem(w) for w in training_s if w not in stopwords.words('english')]
+  development_stems = [stemmer.stem(w) for w in development_s if w not in stopwords.words('english')]
+  test_stems = [stemmer.stem(w) for w in test_s if w not in stopwords.words('english')]
+
   #save training words, use them later to create vocabulary
-  for w in training_s:
-    words.append(w)  
+  [words.append(w) for w in training_stems]
 
-#PorterStemmer:removing the commoner morphological and inflexional endings from words in English
-#also delete stopwords
-stemmer = PorterStemmer()
-training_stems = [stemmer.stem(w) for w in words if w not in stopwords.words('english')]
-
+  training_sentences.append(training_stems)
+  development_sentences.append(development_stems)
+  test_sentences.append(test_stems)
+  
 #create vocabulary with words that occur more than 10 times
-count = nltk.FreqDist(training_stems)
+count = nltk.FreqDist(words)
 vocabulary = [w  for w in count if count[w]>10]
 #pprint(vocabulary)
 
@@ -60,7 +65,7 @@ vocabulary = [w  for w in count if count[w]>10]
 def replaceWithUNK(sentences):
   done_sentences = []
   for s in sentences:   
-    done_sent = [stemmer.stem(w) if (stemmer.stem(w) in vocabulary) else "*UNK*" for w in s]
+    done_sent = [w if (w in vocabulary) else "*UNK*" for w in s]
     done_sentences.append(done_sent)
   return done_sentences
 #do the replace
