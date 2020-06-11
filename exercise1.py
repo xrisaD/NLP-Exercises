@@ -12,7 +12,7 @@ from collections import Counter
 from nltk.util import ngrams
 from pprint import pprint
 
-#downloads
+#download
 nltk.download('punkt')
 nltk.download('gutenberg')
 nltk.download('stopwords')
@@ -67,8 +67,7 @@ def replaceWithUNK(sentences):
   for s in sentences:   
     done_sent = [w if (w in vocabulary) else "*UNK*" for w in s]
     done_sentences.append(done_sent)
-  return done_sentences
-#do the replace
+  return done_sentence
 done_training_sentences = replaceWithUNK(training_sentences)
 done_development_sentences = replaceWithUNK(development_sentences)
 done_test_sentences = replaceWithUNK(test_sentences)
