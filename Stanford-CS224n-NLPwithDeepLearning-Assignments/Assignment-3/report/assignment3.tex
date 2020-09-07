@@ -1,0 +1,108 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\title{CS 224n Assignment 3: Dependency Parsing}
+\author{Chrysa Dikonimaki}
+\date{August 2020}
+
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\roman{subsubsection}}
+
+\begin{document}
+
+\maketitle
+
+%Theory
+\section{Machine Learning and Neural Networks}
+
+% a
+\subsection{}
+\subsubsection{}
+ Using m stops the updates from varying
+as much because the parameters' updates take into account the previous values gradient. \\
+This low variance may be helpful to learning because we will have milder changes. 
+
+\subsubsection{}
+The parameters with larger gradients will get  smaller updates and vice versa. \\
+This solve the vanishing/exploding gradient problem.
+
+% b
+\subsection{}
+
+\subsubsection{}
+$h_i = 0*p_{drop} + (1-p_{drop})*x \Leftrightarrow x = \frac{1}{(1 - p_{drop})}*h_i$   \\
+Consequently , $\gamma = \frac{1}{(1 - p_{drop})} $
+
+\subsubsection{}
+Because during training we want to learn the parameters and avoid overfitting, but during evaluation we want to see what our model learned. So, we want to take into account all parameters, we can't arbitrary remove some of them.
+% Implementation
+\section{Neural Transition-Based Dependency Parsing}
+
+% a
+\subsection{}
+Table 1.
+
+\begin{table}[ht]
+\centering
+\resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|}
+ \hline
+ Stack & Buffer & New dependency & Transition \\ [0.5ex] 
+ \hline
+ ROOT & [I, parsed, this, sentence, correctly] &  & Initial Configuration \\
+ ROOT, I  & [parsed, this, sentence, correctly] &  & SHIFT \\
+ ROOT, I, parsed & [this, sentence, correctly]  & parsed $\rightarrow$ I & LEFT-ARC \\
+ ROOT, parsed, this & [sentence, correctly] &  & SHIFT \\
+ ROOT, parsed, this, sentence & [correctly] &  & SHIFT \\
+  ROOT, parsed, sentence & [correctly] & sentence $\rightarrow$ this  & LEFT-ARC \\
+  ROOT, parsed & [correctly] &  parsed $\rightarrow$ sentence  & RIGHT-ARC \\
+  ROOT, parsed, correctly &  & & SHIFT \\
+  ROOT, parsed & &  parsed $\rightarrow$ correctly  & RIGHT-ARC \\
+  ROOT & &  ROOT $\rightarrow$ parsed  & RIGHT-ARC \\
+ \hline
+\end{tabular}}
+\caption{\label{tab:table-name}2.a}
+\end{table} 
+
+% b
+\subsection{}
+2n = $O(n)$, because the parser parses all the words one time(one SHIFT for each word) and each word is deleted after one ARC, so n ARCs so as to conclude with one element in the stack in the end.
+
+% start from e
+\setcounter{subsection}{4}
+
+% e
+\subsection{}
+Less than half an hour. \\ \\
+\includegraphics{result.PNG}
+
+% f
+\subsection{}
+% i 
+\subsubsection{}
+\textbf{Error type} : Verb Phrase Attachment Error \\
+\textbf{Incorrect dependency} : wedding $\rightarrow$ fearing \\
+\textbf{Correct dependency} : disembarked $\rightarrow$ fearing \\
+
+% ii
+\subsubsection{}
+\textbf{Error type} : Coordination Attachment Error \\
+\textbf{Incorrect dependency} : makes $\rightarrow$ rescue \\
+\textbf{Correct dependency} : rush $\rightarrow$ rescue \\
+
+% iii
+\subsubsection{}
+\textbf{Error type} : Prepositional Phrase Attachment Error \\
+\textbf{Incorrect dependency} : named $\rightarrow$ Midland \\
+\textbf{Correct dependency} : guy $\rightarrow$ Midland \\
+
+% iv
+\subsubsection{}
+\textbf{Error type} : Modifier Attachment Error \\
+\textbf{Incorrect dependency} : elements $\rightarrow$ most \\
+\textbf{Correct dependency} : crucial $\rightarrow$ most \\
+
+\end{document}
